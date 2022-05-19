@@ -79,6 +79,10 @@ GEM
       reline (>= 0.2.7)
     digest (3.1.0)
     erubi (1.10.0)
+    faraday (2.3.0)
+      faraday-net_http (~> 2.0)
+      ruby2_keywords (>= 0.0.4)
+    faraday-net_http (2.0.3)
     globalid (1.0.0)
       activesupport (>= 5.0)
     i18n (1.10.0)
@@ -153,6 +157,7 @@ GEM
     rake (13.0.6)
     reline (0.3.1)
       io-console (~> 0.5)
+    ruby2_keywords (0.0.5)
     sqlite3 (1.4.2)
     strscan (3.0.3)
     thor (1.2.1)
@@ -173,6 +178,7 @@ DEPENDENCIES
   annotate
   bootsnap
   debug
+  faraday
   jbuilder
   puma (~> 5.0)
   rack-cors
