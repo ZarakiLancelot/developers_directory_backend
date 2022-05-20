@@ -8,4 +8,7 @@
 #  updated_at :datetime         not null
 #
 class Developer < ApplicationRecord
+    def to_param
+        username
+    end
 end
