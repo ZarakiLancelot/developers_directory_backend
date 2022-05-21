@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Api::V1::DevelopersController < ApplicationController
-  before_action :set_developer, only: %i[ show update destroy ]
+  before_action :set_developer, only: %i[ update destroy ]
+  Faraday.default_adapter = :net_http
 
   # GET /developers
   # GET /developers.json
@@ -12,25 +13,47 @@ class Api::V1::DevelopersController < ApplicationController
   # GET /developers/1
   # GET /developers/1.json
   def show
-    Faraday.default_adapter = :net_http
+    @url = "https://api.github.com/users/#{params[:id]}"
+    Rails.logger.info @url
 
-    url = "https://api.github.com/users/#{params[:id]}"
-    Rails.logger.info url
-
-    @search = Faraday.get(url) do |req|
+    @search = Faraday.get(@url) do |req|
       req.headers['Authorization'] = "token #{ENV['TOKEN']}"
       Rails.logger.debug req
+      Rails.logger.debug "="*150
     end
     @developer = JSON.parse(@search.body)
 
+    Rails.logger.debug "*"*150
     Rails.logger.debug @developer
+    Rails.logger.debug "*"*150
+    
+    @repos = repos
     render :show
   end
 
   def repos
-    @search_repos = Faraday.get(url) do |req|
-      req.headers['Authorization'] = "token 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"
+    @search_repos = Faraday.get("#{@url}/repos") do |req|
+      req.headers['Authorization'] = "token #{ENV['TOKEN']}"
+
+      Rails.logger.debug "="*150
+      Rails.logger.debug req
     end
+    @repos_ans = JSON.parse(@search_repos.body)
+
+    @languages = []
+    @repos_ans.each do |r|
+      @languages << r['language']
+    end
+
+    @languages = @languages.uniq.reject { |l| l.nil? }
+
+    Rails.logger.debug "-"*150
+    Rails.logger.debug @repos_ans
+    Rails.logger.debug "-"*150
+
+    Rails.logger.debug "<"*150
+    Rails.logger.debug @languages
+    Rails.logger.debug ">"*150
   end
 
   # POST /developers
