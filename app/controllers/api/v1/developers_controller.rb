@@ -13,7 +13,7 @@ class Api::V1::DevelopersController < ApplicationController
   # GET /developers/1
   # GET /developers/1.json
   def show
-    @url = "https://api.github.com/users/#{params[:id]}"
+    @url = "https://api.github.com/users/#{params[:username]}"
     Rails.logger.info @url
 
     @search = Faraday.get(@url) do |req|
@@ -87,7 +87,7 @@ class Api::V1::DevelopersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_developer
-      @developer = Developer.find_by_username(params[:id])
+      @developer = Developer.find_by_username(params[:username])
     end
 
     # Only allow a list of trusted parameters through.
